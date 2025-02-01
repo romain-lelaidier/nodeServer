@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="controller.css"/>
+    <title>Settings</title>
+</head>
+<body>
+    <div id="controller">
+        <a id="homeLink" href="/">Home</a>
+        <h1>Settings</h1>
+        <div id="settingsForms">
+            <form id="updateEmailForm">
+                <h2>Update Email</h2>
+                <div class="infoField">Current email: <span id="currentEmail"></span></div>
+                <div class="field">
+                    <input type="email" id="newEmail" name="newEmail" placeholder=" " required>
+                    <span>new email</span>
+                </div>
+                <button type="submit">Update Email</button>
+            </form>
+        
+            <form id="updatePasswordForm">
+                <h2>Update Password</h2>
+                <div class="field">
+                    <input type="password" id="currentPassword" name="currentPassword" placeholder=" " required>
+                    <span>current password</span>
+                </div>
+                <div class="field">
+                    <input type="password" id="newPassword" name="newPassword" placeholder=" " required>
+                    <span>new password</span>
+                </div>
+                <button type="submit">Update Password</button>
+            </form>
+        
+            <form>
+                <a href="/remove-account.html" id="removeAccountLink">Remove Account</a>
+            </form>
+        </div>
+    </div>
+
+    <script src="/utils.js"></script>
+
+    <script>
+        const user = new User();
+        const formResult = new FormResult('settingsForms')
+
+        document.getElementById("currentEmail").textContent = user.email;
+
+        document.getElementById('updateEmailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newEmail = document.getElementById('newEmail').value;
+            formResult.handlePromise(
+                user.updateEmail(newEmail),
+                "You email address has been changed.",
+                10, "/"
+            )
+        });
+
+        document.getElementById('updatePasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            formResult.handlePromise(
+                user.updatePassword(currentPassword, newPassword),
+                "Your password has been changed.",
+                10, "/"
+            )
+        });
+    </script>
+</body>
+</html>

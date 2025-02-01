@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/controller.css"/>
+    <title>Account Verification</title>
+</head>
+<body>
+    <div id="controller">
+        <a id="homeLink" href="/login.html">Login</a>
+        <h1>Account Verification</h1>
+    </div>
+
+    <script src="/utils.js"></script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const user = new User();
+        const logger = new Logger();
+        const formResult = new FormResult();
+
+        user.verifyAccount(token).then(() => {
+            formResult.displayInfo(`Welcome, ${user.username} ! You can now log in.`)
+            formResult.redirectCountdown(10, "/login.html")
+        }).catch(err => {
+            formResult.displayError(err)
+        });
+    </script>
+</body>
+</html>

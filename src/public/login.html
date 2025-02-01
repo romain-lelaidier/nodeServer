@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/controller.css"/>
+    <title>Login</title>
+</head>
+<body>
+    <div id="controller">
+        <a id="homeLink" href="/">Home</a>
+        <h1>Login</h1>
+        <form id="loginForm">
+            <div class="field">
+                <input type="text" id="username" name="username" placeholder=" " required>
+                <span>username or email</span>
+            </div>
+            <div class="field">
+                <input type="password" id="password" name="password" placeholder=" " required>
+                <span>password</span>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+
+        <form>
+            <a href="/request-password-reset.html">Password forgotten ?</a>
+        </form>
+    </div>
+
+    <script src="/utils.js"></script>
+
+    <script>
+        const user = new User();
+        const logger = new Logger();
+        const formResult = new FormResult("");
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            user.login(username, password).then(data => {
+                window.location.href = '/';
+            }).catch(err => {
+                formResult.displayError(err)
+            })
+
+        });
+    </script>
+</body>
+</html>

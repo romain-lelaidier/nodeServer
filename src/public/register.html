@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="controller.css"/>
+    <title>Register</title>
+</head>
+<body>
+    <div id="controller">
+        <a id="homeLink" href="/">Home</a>
+
+        <h1>Register</h1>
+
+        <form id="registerForm">
+            <div class="field">
+                <input type="text" id="username" name="username" placeholder=" " required>
+                <span>username</span>
+            </div>
+            <div class="field">
+                <input type="email" id="email" name="email" placeholder=" " required>
+                <span>email</span>
+            </div>
+            <div class="field">
+                <input type="password" id="password" name="password" placeholder=" " required>
+                <span>password</span>
+            </div>
+            <button type="submit">Create Account</button>
+        </form>
+    </div>
+
+    <script src="/utils.js"></script>
+
+    <script>
+        const user = new User();
+        const logger = new Logger();
+        const formResult = new FormResult('registerForm');
+
+        if (user.isConnected == true) {
+            logger.log("Please log out first")
+        }
+
+        formResult.form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+
+            formResult.handlePromise(
+                user.register(username, password, email),
+                'Account created. You should receive an email to verify your address.',
+                10, '/'
+            )
+        });
+    </script>
+</body>
+</html>

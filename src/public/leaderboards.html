@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboards</title>
+</head>
+<body>
+    <h1>Leaderboards</h1>
+
+    <script>
+
+        function buildTable(leaderboards, gameType) {
+            const leaderboard = leaderboards.filter(entry => entry.gameType == gameType)
+            const isTimeScore = leaderboard.length > 0 && leaderboard[0].score < 0;
+            console.log(isTimeScore, leaderboard)
+
+            const table = document.createElement('table');
+            table.classList.add("leaderboardTable")
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            const headerRow = document.createElement('tr');
+            const headers = [
+                'Rank', 'User',
+                isTimeScore == true ? 'Time (s)' : 'Score'
+            ];
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+
+            let rank = 1;
+            leaderboard.forEach(entry => {
+                const row = document.createElement('tr');
+                const rankCell = document.createElement('td');
+                const usernameCell = document.createElement('td');
+                const scoreCell = document.createElement('td');
+
+                rankCell.textContent = rank;
+                usernameCell.textContent = entry.username;
+                scoreCell.textContent = isTimeScore ? -entry.score / 1000 : entry.score;
+
+                row.appendChild(rankCell);
+                row.appendChild(usernameCell);
+                row.appendChild(scoreCell);
+                tbody.appendChild(row);
+
+                rank += 1;
+            });
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            return table;
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {            
+            const response = await fetch('/leaderboards');
+            const data = await response.json();
+
+            function getGameTypes() {
+                let types = [];
+                data.leaderboards.forEach(entry => {
+                    if (!types.includes(entry.gameType)) {
+                        types.push(entry.gameType)
+                    }
+                })
+                return types;
+            }
+
+            const gameTypes = getGameTypes();
+            gameTypes.forEach(gameType => {
+                const leaderboardBlock = document.createElement("div");
+                leaderboardBlock.classList.add("leaderboard")
+                const leaderboardTitle = document.createElement("div");
+                leaderboardTitle.classList.add("leaderboardTitle")
+                leaderboardTitle.textContent = "game type : " + gameType
+                leaderboardBlock.append(
+                    leaderboardTitle,
+                    buildTable(data.leaderboards, gameType)
+                )
+                document.body.append(leaderboardBlock)
+            })
+        });
+    </script>
+</body>
+</html>

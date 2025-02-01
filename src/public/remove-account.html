@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/controller.css"/>
+    <title>Remove Account</title>
+</head>
+<body>
+    <div id="controller">
+        <a id="homeLink" href="/settings.html">Settings</a>
+        <h1>Remove Account</h1>
+        <form id="removeAccountForm">
+            <div class="field">
+                <input type="password" id="password" name="password" placeholder=" " required>
+                <span>password</span>
+            </div>
+
+            <button type="submit">Remove Account</button>
+        </form>
+
+        <div id="controllerInfo" style="display:none">
+            <div id="controllerInfoText"></div>
+            <div id="redirectCountdown"></div>
+        </div>
+    </div>
+
+    <script src="/utils.js"></script>
+
+    <script>
+        const user = new User();
+        const formResult = new FormResult('removeAccountForm');
+
+        removeAccountForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+
+            user.removeAccount(password).then(res => {
+                user.logout();
+                formResult.displayInfo("Account succesfully removed. You are now logged out.")
+                formResult.redirectCountdown(10, "/")
+            }).catch(err => {
+                formResult.displayError(err)
+            })
+        });
+    </script>
+</body>
+</html>

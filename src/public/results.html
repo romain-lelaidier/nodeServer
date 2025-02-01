@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Results</title>
+</head>
+<body>
+    <h1>Personal Results</h1>
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Score</th>
+                <th>GameType</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Results will be populated here -->
+        </tbody>
+    </table>
+
+    <script src="/utils.js"></script>
+
+    <script>
+        const user = new User();
+        const logger = new Logger();
+
+        const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (user.isConnected == false) {
+                logger.err("User not connected");
+                return;
+            }
+
+            user.getPersonalResults().then(results => {
+                results.forEach(result => {
+                    const row = resultsTable.insertRow();
+                    const dateCell = row.insertCell(0);
+                    const scoreCell = row.insertCell(1);
+                    const gameTypeCell = row.insertCell(2);
+    
+                    dateCell.textContent = new Date(result.date).toLocaleString();
+                    scoreCell.textContent = result.score;
+                    gameTypeCell.textContent = result.gameType;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
